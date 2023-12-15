@@ -76,6 +76,12 @@ require('lazy').setup({
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
 
+  -- surround
+  'tpope/vim-surround',
+
+  -- tmux integration
+  'aserowy/tmux.nvim',
+
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
   {
@@ -194,7 +200,9 @@ require('lazy').setup({
     'navarasu/onedark.nvim',
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme 'onedark'
+      if vim.version().minor < 10 then
+        vim.cmd.colorscheme 'onedark'
+      end
     end,
   },
 
