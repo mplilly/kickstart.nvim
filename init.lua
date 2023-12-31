@@ -21,7 +21,6 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- [[ Configure plugins ]]
--- NOTE: Here is where you install your plugins.
 --  You can configure plugins using the `config` key.
 --
 --  You can also configure plugins after the setup call,
@@ -60,10 +59,6 @@ require('lazy').setup({
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
 
-      -- Useful status updates for LSP
-      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
-
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
     },
@@ -87,7 +82,7 @@ require('lazy').setup({
   -- },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',  opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -299,10 +294,10 @@ vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = tr
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 -- alternate esc
-vim.keymap.set('i', 'jk', '<Esc>', { desc = '<Esc> using jk'})
+vim.keymap.set('i', 'jk', '<Esc>', { desc = '<Esc> using jk' })
 
 -- esc to clear search
-vim.keymap.set('n', '<ESC>', vim.cmd.nohlsearch, {desc = 'clear highlight search'})
+vim.keymap.set('n', '<ESC>', vim.cmd.nohlsearch, { desc = 'clear highlight search' })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
@@ -310,7 +305,7 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnos
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
-vim.keymap.set('i', 'jk', '<ESC>', {noremap = true, desc = 'Esc'})
+vim.keymap.set('i', 'jk', '<ESC>', { noremap = true, desc = 'Esc' })
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
@@ -359,10 +354,11 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 -- See `:help nvim-treesitter`
 -- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
 vim.defer_fn(function()
----@diagnostic disable-next-line: missing-fields
+  ---@diagnostic disable-next-line: missing-fields
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' , 'toml' },
+    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim',
+      'bash', 'toml' },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
@@ -416,15 +412,31 @@ vim.defer_fn(function()
   }
 end, 0)
 
+-- [[ WhichKey ]]
+
+-- document existing key chains
+require('which-key').register {
+  ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
+  ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
+  ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
+  ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
+  ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
+  ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
+  ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
+  ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+}
+
+-- register which-key VISUAL mode
+-- required for visual <leader>hs (hunk stage) to work
+require('which-key').register({
+  ['<leader>'] = { name = 'VISUAL <leader>' },
+  ['<leader>h'] = { 'Git [H]unk' },
+}, { mode = 'v' })
+
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
-  -- NOTE: Remember that lua is a real programming language, and as such it is possible
-  -- to define small helper and utility functions so you don't have to repeat yourself
-  -- many times.
-  --
-  -- In this case, we create a function that lets us more easily define mappings specific
-  -- for LSP related items. It sets the mode, buffer and description for us each time.
+
   local nmap = function(keys, func, desc)
     if desc then
       desc = 'LSP: ' .. desc
@@ -456,34 +468,17 @@ local on_attach = function(_, bufnr)
   end, { desc = 'Format current buffer with LSP' })
 end
 
--- document existing key chains
-require('which-key').register {
-  ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-  ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-  ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
-  ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
-  ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-  ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-  ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
-  ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-}
--- register which-key VISUAL mode
--- required for visual <leader>hs (hunk stage) to work
-require('which-key').register({
-  ['<leader>'] = { name = 'VISUAL <leader>' },
-  ['<leader>h'] = { 'Git [H]unk' },
-}, { mode = 'v' })
-
 -- mason-lspconfig requires that these setup functions are called in this order
 -- before setting up the servers.
 require('mason').setup()
 require('mason-lspconfig').setup({
-  ensure_installed = {'lua_ls', 'pyright'},
+  ensure_installed = { 'lua_ls', 'pyright' },
 })
 
 -- Setup neovim lua configuration
 require('neodev').setup()
 
+-- MPL: commenting for now since I am leaving out cmp
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 -- local capabilities = vim.lsp.protocol.make_client_capabilities()
 -- capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
@@ -493,12 +488,12 @@ local lspconfig = require('lspconfig')
 lspconfig.lua_ls.setup {
   on_attach = on_attach,
   settings = {
-      workspace = { checkThirdParty = false },
-      telemetry = { enable = false },
-      diagnostics = { disable = { 'missing-fields' } },
+    workspace = { checkThirdParty = false },
+    telemetry = { enable = false },
+    diagnostics = { disable = { 'missing-fields' } },
   },
 }
-lspconfig.pyright.setup({on_attach = on_attach})
+lspconfig.pyright.setup({ on_attach = on_attach })
 
 -- mason_lspconfig.setup_handlers {
 --   function(server_name)
