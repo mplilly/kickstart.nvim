@@ -232,6 +232,9 @@ vim.opt.shiftwidth = 4
 vim.wo.number = true
 vim.wo.relativenumber = true
 
+-- scrolling offset
+vim.opt.scrolloff = 5
+
 -- Enable mouse mode
 vim.o.mouse = 'a'
 
@@ -480,20 +483,24 @@ require('neodev').setup()
 
 -- MPL: commenting for now since I am leaving out cmp
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
--- local capabilities = vim.lsp.protocol.make_client_capabilities()
--- capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- MPL: since I am separating from cmp for now, I have to run the setup functions directly
 local lspconfig = require('lspconfig')
 lspconfig.lua_ls.setup {
   on_attach = on_attach,
+  capabilities = capabilities,
   settings = {
     workspace = { checkThirdParty = false },
     telemetry = { enable = false },
     diagnostics = { disable = { 'missing-fields' } },
   },
 }
-lspconfig.pyright.setup({ on_attach = on_attach })
+lspconfig.pyright.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
+})
 
 -- mason_lspconfig.setup_handlers {
 --   function(server_name)
