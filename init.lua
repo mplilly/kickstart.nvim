@@ -1,5 +1,4 @@
 -- Set <space> as the leader key
--- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -47,6 +46,34 @@ require('lazy').setup({
     opts = {},
     -- Optional dependencies
     dependencies = { "nvim-tree/nvim-web-devicons" },
+  },
+
+  {
+    "mbbill/undotree",
+    cmd = "UndotreeToggle",
+  },
+
+  {
+    "nvim-neorg/neorg",
+    event = "VeryLazy",
+    build = ":Neorg sync-parsers",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("neorg").setup {
+        load = {
+          ["core.defaults"] = {},
+          ["core.concealer"] = {},
+          ["core.dirman"] = {
+            config = {
+              workspaces = {
+                notes = "~/Documents/notes/"
+            },
+            default_workspace = "notes",
+          }
+        }
+      }
+    }
+    end
   },
 
   -- NOTE: This is where your plugins related to LSP can be installed.
