@@ -55,9 +55,10 @@ require('lazy').setup({
 
   {
     "nvim-neorg/neorg",
-    event = "VeryLazy",
+    -- event = "VeryLazy",
     build = ":Neorg sync-parsers",
     dependencies = { "nvim-lua/plenary.nvim" },
+    cmd = { "Neorg", },
     config = function()
       require("neorg").setup {
         load = {
@@ -89,6 +90,8 @@ require('lazy').setup({
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
     },
+    event = { "BufReadPost", "BufNewFile" },
+    cmd = { "LspInfo", "LspInstall", "LspUninstall" },
   },
 
   {
@@ -241,6 +244,7 @@ require('lazy').setup({
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
     },
+    cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
     build = ':TSUpdate',
   },
 
@@ -304,15 +308,6 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
--- numbers
-vim.wo.number = true
-vim.wo.relativenumber = true
-
--- don't use tabs
-vim.o.expandtab = true
-vim.o.tabstop = 4
-vim.o.shiftwidth = 4
-
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
@@ -335,7 +330,8 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnos
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
-vim.keymap.set('i', 'jk', '<ESC>', { noremap = true, desc = 'Esc' })
+-- Neorg keymap
+vim.keymap.set({ 'n' }, '<Leader>ni', ':Neorg index<CR>', { silent = true })
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
@@ -391,7 +387,7 @@ vim.defer_fn(function()
       'bash', 'toml' },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-    auto_install = false,
+    auto_install = true,
 
     highlight = { enable = true },
     indent = { enable = true },
