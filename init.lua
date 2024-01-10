@@ -55,7 +55,7 @@ require('lazy').setup({
 
   {
     "nvim-neorg/neorg",
-    event = "VeryLazy",
+    ft = "norg",
     build = ":Neorg sync-parsers",
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
@@ -76,6 +76,14 @@ require('lazy').setup({
     end
   },
 
+  {
+    "kiyoon/jupynium.nvim",
+    build = "pip install .",
+    opts = {
+      jupyter_command = "jupyter nbclassic",
+    },
+  },
+
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
   {
@@ -85,6 +93,8 @@ require('lazy').setup({
       -- Automatically install LSPs to stdpath for neovim
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
+
+      { 'j-hui/fidget.nvim', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -322,6 +332,10 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+
+-- Remap for moving a line down
+vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", {})
+vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", {})
 
 -- alternate esc
 vim.keymap.set('i', 'jk', '<Esc>', { desc = '<Esc> using jk' })
