@@ -63,7 +63,17 @@ require('lazy').setup({
       require("neorg").setup {
         load = {
           ["core.defaults"] = {},
-          ["core.concealer"] = {},
+          ["core.concealer"] = {
+            config = {
+              icons = {
+                todo = {
+                  undone = {
+                    icon = " ",
+                  },
+                },
+              },
+            },
+          },
           ["core.dirman"] = {
             config = {
               workspaces = {
@@ -308,6 +318,21 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+-- [[ autocommands ]]
+
+vim.api.nvim_create_autocmd(
+  {"BufNewFile", "BufEnter"},
+  {
+    pattern="*.txt",
+    callback=function()
+      vim.opt.wrap=true
+      vim.opt.linebreak=true
+      vim.wo.number=false
+      vim.wo.relativenumber=false
+    end,
+  }
+)
+
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
@@ -332,6 +357,7 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 
 -- Neorg keymap
 vim.keymap.set({ 'n' }, '<Leader>ni', ':Neorg index<CR>', { silent = true })
+vim.keymap.set({ 'n' }, '<Leader>nc', ':Neorg toggle-concealer<CR>', { silent = true })
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
