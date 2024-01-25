@@ -198,6 +198,8 @@ require('lazy').setup({
         -- Toggles
         map('n', '<leader>tb', gs.toggle_current_line_blame, { desc = 'toggle git blame line' })
         map('n', '<leader>td', gs.toggle_deleted, { desc = 'toggle git show deleted' })
+        map('n', '<leader>tu', "<cmd>UndotreeToggle<CR>", { desc = 'toggle Undotree' })
+        map('n', '<leader>th', function() require("harpoon.ui").toggle_quick_menu() end, { desc = 'toggle Undotree' })
 
         -- Text object
         map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', { desc = 'select git hunk' })
