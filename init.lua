@@ -382,6 +382,20 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 vim.keymap.set({ 'n' }, '<Leader>ni', ':Neorg index<CR>', { silent = true })
 vim.keymap.set({ 'n' }, '<Leader>nc', ':Neorg toggle-concealer<CR>', { silent = true })
 
+-- Harpoon keymap
+vim.keymap.set( { 'n' }, '<leader>h1',
+  function () require('harpoon.ui').nav_file(1) end,
+  { desc = 'Harpoon file 1' }
+)
+vim.keymap.set({ 'n' } , '<leader>h2',
+  function() require('harpoon.ui').nav_file(2) end,
+  { desc = 'Harpoon file 2' }
+)
+vim.keymap.set({ 'n' } , '<leader>ha',
+  function() require('harpoon.mark').add_file() end,
+  { desc = 'Add file to Harpoon list' }
+)
+
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
 require('telescope').setup {
