@@ -41,13 +41,14 @@ require('lazy').setup({
     opts = {}
   },
 
-  -- try using netrw
+  -- Use netrc with :Explore
   -- {
   --   'stevearc/oil.nvim',
   --   opts = {},
   --   -- Optional dependencies
   --   dependencies = { "nvim-tree/nvim-web-devicons" },
   -- },
+
 
   {
     "ThePrimeagen/harpoon",
@@ -64,11 +65,22 @@ require('lazy').setup({
     ft = "norg",
     build = ":Neorg sync-parsers",
     dependencies = { "nvim-lua/plenary.nvim" },
+    cmd = { "Neorg", },
     config = function()
       require("neorg").setup {
         load = {
           ["core.defaults"] = {},
-          ["core.concealer"] = {},
+          ["core.concealer"] = {
+            config = {
+              icons = {
+                todo = {
+                  undone = {
+                    icon = " ",
+                  },
+                },
+              },
+            },
+          },
           ["core.dirman"] = {
             config = {
               workspaces = {
@@ -100,11 +112,13 @@ require('lazy').setup({
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
 
-      { 'j-hui/fidget.nvim', opts = {} },
+      -- { 'j-hui/fidget.nvim', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
     },
+    event = { "BufReadPost", "BufNewFile" },
+    cmd = { "LspInfo", "LspInstall", "LspUninstall" },
   },
 
   {
@@ -194,6 +208,8 @@ require('lazy').setup({
         -- Toggles
         map('n', '<leader>tb', gs.toggle_current_line_blame, { desc = 'toggle git blame line' })
         map('n', '<leader>td', gs.toggle_deleted, { desc = 'toggle git show deleted' })
+        map('n', '<leader>tu', "<cmd>UndotreeToggle<CR>", { desc = 'toggle Undotree' })
+        map('n', '<leader>th', function() require("harpoon.ui").toggle_quick_menu() end, { desc = 'toggle Undotree' })
 
         -- Text object
         map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', { desc = 'select git hunk' })
@@ -257,6 +273,7 @@ require('lazy').setup({
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
     },
+    cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
     build = ':TSUpdate',
   },
 
@@ -320,14 +337,20 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
--- numbers
-vim.wo.number = true
-vim.wo.relativenumber = true
+-- [[ autocommands ]]
 
--- don't use tabs
-vim.o.expandtab = true
-vim.o.tabstop = 4
-vim.o.shiftwidth = 4
+vim.api.nvim_create_autocmd(
+  {"BufNewFile", "BufEnter"},
+  {
+    pattern="*.txt",
+    callback=function()
+      vim.opt.wrap=true
+      vim.opt.linebreak=true
+      vim.wo.number=false
+      vim.wo.relativenumber=false
+    end,
+  }
+)
 
 -- [[ Basic Keymaps ]]
 
@@ -355,7 +378,23 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnos
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
-vim.keymap.set('i', 'jk', '<ESC>', { noremap = true, desc = 'Esc' })
+-- Neorg keymap
+vim.keymap.set({ 'n' }, '<Leader>ni', ':Neorg index<CR>', { silent = true })
+vim.keymap.set({ 'n' }, '<Leader>nc', ':Neorg toggle-concealer<CR>', { silent = true })
+
+-- Harpoon keymap
+vim.keymap.set( { 'n' }, '<leader>h1',
+  function () require('harpoon.ui').nav_file(1) end,
+  { desc = 'Harpoon file 1' }
+)
+vim.keymap.set({ 'n' } , '<leader>h2',
+  function() require('harpoon.ui').nav_file(2) end,
+  { desc = 'Harpoon file 2' }
+)
+vim.keymap.set({ 'n' } , '<leader>ha',
+  function() require('harpoon.mark').add_file() end,
+  { desc = 'Add file to Harpoon list' }
+)
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
@@ -392,11 +431,11 @@ local function telescope_live_grep_open_files()
 end
 vim.keymap.set('n', '<leader>s/', telescope_live_grep_open_files, { desc = '[S]earch [/] in Open Files' })
 vim.keymap.set('n', '<leader>ss', require('telescope.builtin').builtin, { desc = '[S]earch [S]elect Telescope' })
-vim.keymap.set('n', '<leader>sg', require('telescope.builtin').git_files, { desc = '[S]earch [G]it Files' })
+vim.keymap.set('n', '<leader>sg', require('telescope.builtin').git_files, { desc = '[S]earch [G]it [F]iles' })
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>st', require('telescope.builtin').live_grep, { desc = '[S]earch [Text] by Grep' })
+vim.keymap.set('n', '<leader>st', require('telescope.builtin').live_grep, { desc = '[S]earch [Text] by grep' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
 
@@ -411,7 +450,7 @@ vim.defer_fn(function()
       'bash', 'toml' },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-    auto_install = false,
+    auto_install = true,
 
     highlight = { enable = true },
     indent = { enable = true },
