@@ -94,17 +94,6 @@ require('lazy').setup({
   },
 
   {
-    "kiyoon/jupynium.nvim",
-    -- on some systems pip will need to be run from the .local/share/nvim folder
-    build = "pip install .",
-    opts = {
-      jupyter_command = "jupyter nbclassic",
-    },
-  },
-
-  -- NOTE: This is where your plugins related to LSP can be installed.
-  --  The configuration is done below. Search for lspconfig to find it below.
-  {
     -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     dependencies = {
