@@ -57,7 +57,6 @@ require('lazy').setup({
 
   {
     "mbbill/undotree",
-    cmd = "UndotreeToggle",
   },
 
   {
@@ -96,6 +95,7 @@ require('lazy').setup({
 
   {
     "kiyoon/jupynium.nvim",
+    -- on some systems pip will need to be run from the .local/share/nvim folder
     build = "pip install .",
     opts = {
       jupyter_command = "jupyter nbclassic",
@@ -126,8 +126,8 @@ require('lazy').setup({
     'hrsh7th/nvim-cmp',
     dependencies = {
       -- Snippet Engine & its associated nvim-cmp source
-      'L3MON4D3/LuaSnip',
-      'saadparwaiz1/cmp_luasnip',
+      -- 'L3MON4D3/LuaSnip',
+      -- 'saadparwaiz1/cmp_luasnip',
 
       -- Adds LSP completion capabilities
       'hrsh7th/cmp-nvim-lsp',
@@ -208,7 +208,7 @@ require('lazy').setup({
         -- Toggles
         map('n', '<leader>tb', gs.toggle_current_line_blame, { desc = 'toggle git blame line' })
         map('n', '<leader>td', gs.toggle_deleted, { desc = 'toggle git show deleted' })
-        map('n', '<leader>tu', "<cmd>UndotreeToggle<CR>", { desc = 'toggle Undotree' })
+        map('n', '<leader>tu', ":UndotreeToggle<CR>", { desc = 'toggle Undotree' })
         map('n', '<leader>th', function() require("harpoon.ui").toggle_quick_menu() end, { desc = 'toggle Undotree' })
 
         -- Text object
@@ -567,12 +567,10 @@ require('mason-lspconfig').setup({
 -- Setup neovim lua configuration
 require('neodev').setup()
 
--- MPL: commenting for now since I am leaving out cmp
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
--- MPL: since I am separating from cmp for now, I have to run the setup functions directly
 local lspconfig = require('lspconfig')
 lspconfig.lua_ls.setup {
   on_attach = on_attach,
@@ -588,30 +586,19 @@ lspconfig.pyright.setup({
   capabilities = capabilities,
 })
 
--- mason_lspconfig.setup_handlers {
---   function(server_name)
---     require('lspconfig')[server_name].setup {
---       capabilities = capabilities,
---       on_attach = on_attach,
---       settings = servers[server_name],
---       filetypes = (servers[server_name] or {}).filetypes,
---     }
---   end,
--- }
-
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
 local cmp = require 'cmp'
-local luasnip = require 'luasnip'
-require('luasnip.loaders.from_vscode').lazy_load()
-luasnip.config.setup {}
+-- local luasnip = require 'luasnip'
+-- require('luasnip.loaders.from_vscode').lazy_load()
+-- luasnip.config.setup {}
 --
 cmp.setup {
-  snippet = {
-    expand = function(args)
-      luasnip.lsp_expand(args.body)
-    end,
-  },
+  -- snippet = {
+  --   expand = function(args)
+  --     luasnip.lsp_expand(args.body)
+  --   end,
+  -- },
   completion = {
     completeopt = 'menu,menuone,noinsert',
   },
@@ -628,8 +615,8 @@ cmp.setup {
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
-      elseif luasnip.expand_or_locally_jumpable() then
-        luasnip.expand_or_jump()
+      -- elseif luasnip.expand_or_locally_jumpable() then
+      --   luasnip.expand_or_jump()
       else
         fallback()
       end
@@ -637,8 +624,8 @@ cmp.setup {
     ['<S-Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
-      elseif luasnip.locally_jumpable(-1) then
-        luasnip.jump(-1)
+      -- elseif luasnip.locally_jumpable(-1) then
+      --   luasnip.jump(-1)
       else
         fallback()
       end
@@ -646,7 +633,7 @@ cmp.setup {
   },
   sources = {
     { name = 'nvim_lsp' },
-    { name = 'luasnip' },
+    -- { name = 'luasnip' },
     { name = 'path' },
   },
 }
