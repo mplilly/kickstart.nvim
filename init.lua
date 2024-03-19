@@ -346,6 +346,11 @@ vim.opt.timeoutlen = 300
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
+vim.opt.list = true
+vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+
+vim.opt.cursorline = true
+
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 
@@ -367,6 +372,14 @@ vim.api.nvim_create_autocmd(
   }
 )
 
+-- see `:help vim.highlight_on_yank()
+vim.api.nvim_create_autocmd('TextYankPost', {
+  desc = 'Highlight when yanking (copying) text',
+  group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
+  callback = function()
+    vim.highlight.on_yank()
+  end,
+})
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
@@ -388,9 +401,11 @@ vim.keymap.set('i', 'jk', '<Esc>', { desc = '<Esc> using jk' })
 vim.keymap.set('n', '<ESC>', vim.cmd.nohlsearch, { desc = 'clear highlight search' })
 
 -- buffer commands
-vim.keymap.set('n', '<ALT>h', vim.cmd("bprev"), { desc = 'buffer previous' })
-vim.keymap.set('n', '<ALT>l', vim.cmd("bnext"), { desc = 'buffer next' })
+vim.keymap.set('n', '<A-h>', '<cmd>bprev<CR>', { desc = 'buffer previous' })
+vim.keymap.set('n', '<A-l>', '<cmd>bnext<CR>', { desc = 'buffer next' })
 
+-- alternative to <C-\><C-n>
+vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
