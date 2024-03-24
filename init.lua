@@ -2,7 +2,7 @@
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-
+vim.g.have_nerd_font = true
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -57,7 +57,6 @@ require('lazy').setup({
 
   {
     "mbbill/undotree",
-    cmd = "UndotreeToggle",
   },
 
   {
@@ -95,18 +94,6 @@ require('lazy').setup({
   },
 
   {
-    "kiyoon/jupynium.nvim",
-    build = "pip install .",
-    -- opts = {} is the same as require("jupynium").setup({})
-    opts = {
-      default_notebook_URL = "localhost:8888/nbclassic",
-      jupyter_command = "jupyter nbclassic",
-    },
-  },
-
-  -- NOTE: This is where your plugins related to LSP can be installed.
-  --  The configuration is done below. Search for lspconfig to find it below.
-  {
     -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     dependencies = {
@@ -133,11 +120,12 @@ require('lazy').setup({
     dependencies = {
       -- Snippet Engine & its associated nvim-cmp source
       'L3MON4D3/LuaSnip',
-      'saadparwaiz1/cmp_luasnip',
+      -- 'saadparwaiz1/cmp_luasnip',
 
       -- Adds LSP completion capabilities
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
+      'hrsh7th/cmp-cmdline',
 
       -- Adds a number of user-friendly snippets
       -- 'rafamadriz/friendly-snippets',
@@ -145,7 +133,29 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim',  opts = {} },
+  { 'folke/which-key.nvim',  opts = {},
+    event = 'VimEnter',
+    config = function()
+      require('which-key').register({
+        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
+        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
+        ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
+        ['<leader>h'] = { name = '[H]arpoon', _ = 'which_key_ignore' },
+        ['<leader>n'] = { name = '[N]eorg', _ = 'which_key_ignore' },
+        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
+        ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
+        ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
+        ['<leader>u'] = { name = '[U]ndotree', _ = 'which_key_ignore' },
+        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+
+        require('which-key').register({
+          ['<leader>'] = { name = 'VISUAL <leader>' },
+          ['<leader>g'] = { '[G]it Hunk' },
+        }, { mode = 'v' })
+
+      })
+    end,
+  },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -214,8 +224,6 @@ require('lazy').setup({
         -- Toggles
         map('n', '<leader>tb', gs.toggle_current_line_blame, { desc = 'toggle git blame line' })
         map('n', '<leader>td', gs.toggle_deleted, { desc = 'toggle git show deleted' })
-        map('n', '<leader>tu', "<cmd>UndotreeToggle<CR>", { desc = 'toggle Undotree' })
-        map('n', '<leader>th', function() require("harpoon.ui").toggle_quick_menu() end, { desc = 'toggle Undotree' })
 
         -- Text object
         map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', { desc = 'select git hunk' })
@@ -255,22 +263,88 @@ require('lazy').setup({
   -- Fuzzy Finder (files, lsp, etc)
   {
     'nvim-telescope/telescope.nvim',
+    event = 'VimEnter',
     branch = '0.1.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
-      -- Fuzzy Finder Algorithm which requires local dependencies to be built.
-      -- Only load if `make` is available. Make sure you have the system
-      -- requirements installed.
+      -- Two important keymaps to use while in Telescope are:
+      --  - Insert mode: <c-/>
+      --  - Normal mode: ?
       {
         'nvim-telescope/telescope-fzf-native.nvim',
-        -- NOTE: If you are having trouble with this installation,
-        --       refer to the README for telescope-fzf-native for more instructions.
         build = 'make',
+        -- `cond` is a condition used to determine whether plugin should be loaded
         cond = function()
           return vim.fn.executable 'make' == 1
         end,
       },
+      {'nvim-telescope/telescope-ui-select.nvim'},
+      {'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
     },
+    config = function()
+      -- [[ Configure Telescope ]]
+      -- See `:help telescope` and `:help telescope.setup()`
+      require('telescope').setup {
+        --  `:help telescope.setup()`
+        --
+        -- defaults = {
+        --   mappings = {
+        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+        --   },
+        -- },
+        -- pickers = {}
+        extensions = {
+          ['ui-select'] = {
+            require('telescope.themes').get_dropdown(),
+          },
+        },
+      }
+
+      -- Enable Telescope extensions if they are installed
+      pcall(require('telescope').load_extension, 'fzf')
+      pcall(require('telescope').load_extension, 'ui-select')
+
+      -- See `:help telescope.builtin`
+      local builtin = require 'telescope.builtin'
+      vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
+      vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
+      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
+      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
+      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+      vim.keymap.set('n', '<leader>st', require('telescope.builtin').live_grep, { desc = '[S]earch [Text] by grep' })
+      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
+      vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
+      vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+
+        -- previous telescope shortcuts
+-- vim.keymap.set('n', '<leader>s/', telescope_live_grep_open_files, { desc = '[S]earch [/] in Open Files' })
+--vim.keymap.set('n', '<leader>sg', require('telescope.builtin').git_files, { desc = '[S]earch [G]it [F]iles' })
+-- vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
+      -- Slightly advanced example of overriding default behavior and theme
+      vim.keymap.set('n', '<leader>/', function()
+        -- You can pass additional configuration to Telescope to change the theme, layout, etc.
+        builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+          winblend = 10,
+          previewer = false,
+        })
+      end, { desc = '[/] Fuzzily search in current buffer' })
+
+      -- It's also possible to pass additional configuration options.
+      --  See `:help telescope.builtin.live_grep()` for information about particular keys
+      vim.keymap.set('n', '<leader>s/', function()
+        builtin.live_grep {
+          grep_open_files = true,
+          prompt_title = 'Live Grep in Open Files',
+        }
+      end, { desc = '[S]earch [/] in Open Files' })
+
+      -- Shortcut for searching your Neovim configuration files
+      vim.keymap.set('n', '<leader>sn', function()
+        builtin.find_files { cwd = vim.fn.stdpath 'config' }
+      end, { desc = '[S]earch [N]eovim files' })
+    end,
   },
 
   {
@@ -306,12 +380,12 @@ vim.opt.splitbelow = true
 vim.opt.splitright = true
 
 -- Enable mouse mode
-vim.o.mouse = 'a'
+vim.opt.mouse = 'a'
 
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`, OSC 52 useful for ssh, some terminals
-vim.o.clipboard = 'unnamedplus'
+vim.opt.clipboard = 'unnamedplus'
 -- vim.g.clipboard = {
 --     name = 'OSC 52',
 --     copy = {
@@ -325,21 +399,30 @@ vim.o.clipboard = 'unnamedplus'
 -- }
 
 -- Enable break indent
-vim.o.breakindent = true
+vim.opt.breakindent = true
 
 -- Save undo history
-vim.o.undofile = true
+vim.opt.undofile = true
 
 -- Case-insensitive searching UNLESS \C or capital in search
-vim.o.ignorecase = true
-vim.o.smartcase = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
 
 -- Keep signcolumn on by default
-vim.wo.signcolumn = 'yes'
+vim.opt.signcolumn = 'yes'
 
 -- Decrease update time
-vim.o.updatetime = 250
-vim.o.timeoutlen = 300
+vim.opt.updatetime = 250
+vim.opt.timeoutlen = 300
+
+-- configure where new splits open
+vim.opt.splitright = true
+vim.opt.splitbelow = true
+
+vim.opt.list = true
+vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+
+vim.opt.cursorline = true
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
@@ -362,6 +445,14 @@ vim.api.nvim_create_autocmd(
   }
 )
 
+-- see `:help vim.highlight_on_yank()
+vim.api.nvim_create_autocmd('TextYankPost', {
+  desc = 'Highlight when yanking (copying) text',
+  group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
+  callback = function()
+    vim.highlight.on_yank()
+  end,
+})
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
@@ -382,6 +473,13 @@ vim.keymap.set('i', 'jk', '<Esc>', { desc = '<Esc> using jk' })
 -- esc to clear search
 vim.keymap.set('n', '<ESC>', vim.cmd.nohlsearch, { desc = 'clear highlight search' })
 
+-- buffer commands
+vim.keymap.set('n', '<C-h>', ':bprev<CR>', { desc = 'buffer previous' })
+vim.keymap.set('n', '<C-l>', ':bnext<CR>', { desc = 'buffer next' })
+
+-- alternative to <C-\><C-n>
+vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
@@ -401,53 +499,25 @@ vim.keymap.set({ 'n' } , '<leader>h2',
   function() require('harpoon.ui').nav_file(2) end,
   { desc = 'Harpoon file 2' }
 )
+vim.keymap.set( { 'n' }, '<leader>h3',
+  function () require('harpoon.ui').nav_file(3) end,
+  { desc = 'Harpoon file 3' }
+)
+vim.keymap.set( { 'n' }, '<leader>h4',
+  function () require('harpoon.ui').nav_file(4) end,
+  { desc = 'Harpoon file 4' }
+)
 vim.keymap.set({ 'n' } , '<leader>ha',
   function() require('harpoon.mark').add_file() end,
   { desc = 'Add file to Harpoon list' }
 )
+vim.keymap.set({'n'}, '<leader>hl', 
+  function() require("harpoon.ui").toggle_quick_menu() end, 
+  { desc = 'toggle Harpoon list' })
 
--- [[ Configure Telescope ]]
--- See `:help telescope` and `:help telescope.setup()`
-require('telescope').setup {
-  defaults = {
-    mappings = {
-      i = {
-        ['<C-u>'] = false,
-        ['<C-d>'] = false,
-      },
-    },
-  },
-}
+-- Undotree Keymaps
+vim.keymap.set({'n'}, '<leader>ut', ":UndotreeToggle<CR>", { desc = 'toggle Undotree' })
 
--- Enable telescope fzf native, if installed
-pcall(require('telescope').load_extension, 'fzf')
-
--- See `:help telescope.builtin`
-vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
-vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
-vim.keymap.set('n', '<leader>/', function()
-  -- You can pass additional configuration to telescope to change theme, layout, etc.
-  require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-    winblend = 10,
-    previewer = false,
-  })
-end, { desc = '[/] Fuzzily search in current buffer' })
-
-local function telescope_live_grep_open_files()
-  require('telescope.builtin').live_grep {
-    grep_open_files = true,
-    prompt_title = 'Live Grep in Open Files',
-  }
-end
-vim.keymap.set('n', '<leader>s/', telescope_live_grep_open_files, { desc = '[S]earch [/] in Open Files' })
-vim.keymap.set('n', '<leader>ss', require('telescope.builtin').builtin, { desc = '[S]earch [S]elect Telescope' })
-vim.keymap.set('n', '<leader>sg', require('telescope.builtin').git_files, { desc = '[S]earch [G]it [F]iles' })
-vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
-vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
-vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>st', require('telescope.builtin').live_grep, { desc = '[S]earch [Text] by grep' })
-vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
-vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
@@ -511,27 +581,6 @@ vim.defer_fn(function()
   }
 end, 0)
 
--- [[ WhichKey ]]
-
--- document existing key chains
-require('which-key').register({
-  ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-  ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-  ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
-  ['<leader>h'] = { name = '[H]arpoon', _ = 'which_key_ignore' },
-  ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-  ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-  ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
-  ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-})
-
--- register which-key VISUAL mode
--- required for visual <leader>hs (hunk stage) to work
-require('which-key').register({
-  ['<leader>'] = { name = 'VISUAL <leader>' },
-  ['<leader>g'] = { '[G]it Hunk' },
-}, { mode = 'v' })
-
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
@@ -577,12 +626,10 @@ require('mason-lspconfig').setup({
 -- Setup neovim lua configuration
 require('neodev').setup()
 
--- MPL: commenting for now since I am leaving out cmp
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
--- MPL: since I am separating from cmp for now, I have to run the setup functions directly
 local lspconfig = require('lspconfig')
 lspconfig.lua_ls.setup {
   on_attach = on_attach,
@@ -609,22 +656,10 @@ rt.setup({
   }
 })
 
--- mason_lspconfig.setup_handlers {
---   function(server_name)
---     require('lspconfig')[server_name].setup {
---       capabilities = capabilities,
---       on_attach = on_attach,
---       settings = servers[server_name],
---       filetypes = (servers[server_name] or {}).filetypes,
---     }
---   end,
--- }
-
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
-require('luasnip.loaders.from_vscode').lazy_load()
 luasnip.config.setup {}
 --
 cmp.setup {
@@ -634,23 +669,31 @@ cmp.setup {
     end,
   },
   completion = {
-    completeopt = 'menu,menuone,noinsert',
+    completeopt = 'menu,menuone,noselect,noinsert',
   },
   mapping = cmp.mapping.preset.insert {
-    ['<C-n>'] = cmp.mapping.select_next_item(),
-    ['<C-p>'] = cmp.mapping.select_prev_item(),
+    ['<C-n>'] = cmp.mapping.select_next_item({behavior = cmp.SelectBehavior.Select}),
+    ['<C-p>'] = cmp.mapping.select_prev_item({behavior = cmp.SelectBehavior.Select}),
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-y>'] = cmp.mapping.confirm { select = true },
     ['<C-Space>'] = cmp.mapping.complete {},
-    ['<CR>'] = cmp.mapping.confirm {
-      behavior = cmp.ConfirmBehavior.Replace,
-      select = true,
-    },
+    ["<CR>"] = cmp.mapping({
+       i = function(fallback)
+         if cmp.visible() and cmp.get_active_entry() then
+           cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+         else
+           fallback()
+         end
+       end,
+       s = cmp.mapping.confirm({ select = true }),
+       c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
+    }),
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
-      elseif luasnip.expand_or_locally_jumpable() then
-        luasnip.expand_or_jump()
+      -- elseif luasnip.expand_or_locally_jumpable() then
+      --   luasnip.expand_or_jump()
       else
         fallback()
       end
@@ -658,17 +701,17 @@ cmp.setup {
     ['<S-Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
-      elseif luasnip.locally_jumpable(-1) then
-        luasnip.jump(-1)
+      -- elseif luasnip.locally_jumpable(-1) then
+      --   luasnip.jump(-1)
       else
         fallback()
       end
     end, { 'i', 's' }),
   },
   sources = {
-    { name = 'nvim_lsp' },
-    { name = 'luasnip' },
-    { name = 'path' },
+    { name = 'nvim_lsp', keyword_length=3 },
+    { name = 'path', keyword_length=3 },
+    { name = 'cmdline', keyword_length=2 },
   },
 }
 
