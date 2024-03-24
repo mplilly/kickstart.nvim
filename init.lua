@@ -97,7 +97,9 @@ require('lazy').setup({
   {
     "kiyoon/jupynium.nvim",
     build = "pip install .",
+    -- opts = {} is the same as require("jupynium").setup({})
     opts = {
+      default_notebook_URL = "localhost:8888/nbclassic",
       jupyter_command = "jupyter nbclassic",
     },
   },
@@ -119,6 +121,10 @@ require('lazy').setup({
     },
     event = { "BufReadPost", "BufNewFile" },
     cmd = { "LspInfo", "LspInstall", "LspUninstall" },
+  },
+  -- automatically set up lspconfig for rust-analyzer
+  {
+    "simrat39/rust-tools.nvim",
   },
 
   {
@@ -294,6 +300,10 @@ vim.wo.relativenumber = true
 
 -- scrolling offset
 vim.opt.scrolloff = 5
+
+-- locations for new splits
+vim.opt.splitbelow = true
+vim.opt.splitright = true
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -561,7 +571,7 @@ end
 -- before setting up the servers.
 require('mason').setup()
 require('mason-lspconfig').setup({
-  ensure_installed = { 'lua_ls', 'pyright' },
+  ensure_installed = { 'lua_ls', 'pyright', 'rust_analyzer' },
 })
 
 -- Setup neovim lua configuration
@@ -586,6 +596,17 @@ lspconfig.lua_ls.setup {
 lspconfig.pyright.setup({
   on_attach = on_attach,
   capabilities = capabilities,
+})
+local rt = require("rust-tools")
+rt.setup({
+  server = {
+    on_attach = function(_, bufnr)
+      -- Hover
+      vim.keymap.set("n", "K", rt.hover_actions.hover_actions, { buffer = bufnr })
+      -- code actions
+      vim.keymap.set("n", "<Leader>ca", rt.code_action_group.code_action_group, { buffer = bufnr })
+    end,
+  }
 })
 
 -- mason_lspconfig.setup_handlers {
