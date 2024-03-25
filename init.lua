@@ -459,6 +459,9 @@ vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 -- Remap for moving a line down
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", {})
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", {})
+-- scroll with cursor in middle of the screen
+vim.keymap.set('n', '<C-d>', "<C-d>zz", {})
+vim.keymap.set('n', '<C-u>', "<C-u>zz", {})
 
 -- alternate esc
 vim.keymap.set('i', 'jk', '<Esc>', { desc = '<Esc> using jk' })
