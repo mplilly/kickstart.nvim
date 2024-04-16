@@ -100,6 +100,7 @@ require('lazy').setup({
       -- Automatically install LSPs to stdpath for neovim
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
+      -- "WhoIsSethDaniel/mason-tool-installer.nvim",
 
       -- { 'j-hui/fidget.nvim', opts = {} },
 
@@ -319,9 +320,9 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
         -- previous telescope shortcuts
--- vim.keymap.set('n', '<leader>s/', telescope_live_grep_open_files, { desc = '[S]earch [/] in Open Files' })
---vim.keymap.set('n', '<leader>sg', require('telescope.builtin').git_files, { desc = '[S]earch [G]it [F]iles' })
--- vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
+      -- vim.keymap.set('n', '<leader>s/', telescope_live_grep_open_files, { desc = '[S]earch [/] in Open Files' })
+      --vim.keymap.set('n', '<leader>sg', require('telescope.builtin').git_files, { desc = '[S]earch [G]it [F]iles' })
+      -- vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
         -- You can pass additional configuration to Telescope to change the theme, layout, etc.
@@ -344,6 +345,34 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[S]earch [N]eovim files' })
+    end,
+  },
+
+  {
+    "mfussenegger/nvim-lint",
+    lazy = true,
+    event = { "BufReadPre", "BufNewFile" }, -- to disable, comment this out
+    config = function()
+      local lint = require("lint")
+
+      lint.linters_by_ft = {
+        lua = { "luacheck" },
+        python = { "flake8" },
+        -- python = { "pylint" },
+      }
+
+      local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
+
+      vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+        group = lint_augroup,
+        callback = function()
+          lint.try_lint()
+        end,
+      })
+
+      vim.keymap.set("n", "<leader>cl", function()
+        lint.try_lint()
+      end, { desc = "Trigger linting for current file" })
     end,
   },
 
@@ -477,8 +506,8 @@ vim.keymap.set('i', 'jk', '<Esc>', { desc = '<Esc> using jk' })
 vim.keymap.set('n', '<ESC>', vim.cmd.nohlsearch, { desc = 'clear highlight search' })
 
 -- buffer commands
-vim.keymap.set('n', '<C-h>', ':bprev<CR>', { desc = 'buffer previous' })
-vim.keymap.set('n', '<C-l>', ':bnext<CR>', { desc = 'buffer next' })
+vim.keymap.set('n', '<A-h>', ':bprev<CR>', { desc = 'buffer previous' })
+vim.keymap.set('n', '<A-l>', ':bnext<CR>', { desc = 'buffer next' })
 
 -- alternative to <C-\><C-n>
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
