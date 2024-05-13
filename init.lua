@@ -474,8 +474,8 @@ vim.keymap.set('i', 'jk', '<Esc>', { desc = '<Esc> using jk' })
 vim.keymap.set('n', '<ESC>', vim.cmd.nohlsearch, { desc = 'clear highlight search' })
 
 -- buffer commands
-vim.keymap.set('n', '<C-h>', ':bprev<CR>', { desc = 'buffer previous' })
-vim.keymap.set('n', '<C-l>', ':bnext<CR>', { desc = 'buffer next' })
+vim.keymap.set('n', '<A-h>', ':bprev<CR>', { desc = 'buffer previous' })
+vim.keymap.set('n', '<A-l>', ':bnext<CR>', { desc = 'buffer next' })
 
 -- alternative to <C-\><C-n>
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
