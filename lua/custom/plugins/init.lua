@@ -67,7 +67,6 @@ return {
     priority = 1000, -- Make sure to load this before all the other start plugins.
     -- Theme inspired by Atom
     'navarasu/onedark.nvim',
-    priority = 1000,
     config = function()
       if vim.version().minor < 10 then
         -- use neovim default colorscheme for 0.10
@@ -75,5 +74,4 @@ return {
       end
     end,
   },
-  },
-} 
+}
