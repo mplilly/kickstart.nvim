@@ -1,11 +1,97 @@
+--[[
+
+=====================================================================
+==================== READ THIS BEFORE CONTINUING ====================
+=====================================================================
+========                                    .-----.          ========
+========         .----------------------.   | === |          ========
+========         |.-""""""""""""""""""-.|   |-----|          ========
+========         ||                    ||   | === |          ========
+========         ||   KICKSTART.NVIM   ||   |-----|          ========
+========         ||                    ||   | === |          ========
+========         ||                    ||   |-----|          ========
+========         ||:Tutor              ||   |:::::|          ========
+========         |'-..................-'|   |____o|          ========
+========         `"")----------------(""`   ___________      ========
+========        /::::::::::|  |::::::::::\  \ no mouse \     ========
+========       /:::========|  |==hjkl==:::\  \ required \    ========
+========      '""""""""""""'  '""""""""""""'  '""""""""""'   ========
+========                                                     ========
+=====================================================================
+=====================================================================
+
+What is Kickstart?
+
+  Kickstart.nvim is *not* a distribution.
+
+  Kickstart.nvim is a starting point for your own configuration.
+    The goal is that you can read every line of code, top-to-bottom, understand
+    what your configuration is doing, and modify it to suit your needs.
+
+    Once you've done that, you can start exploring, configuring and tinkering to
+    make Neovim your own! That might mean leaving Kickstart just the way it is for a while
+    or immediately breaking it into modular pieces. It's up to you!
+
+    If you don't know anything about Lua, I recommend taking some time to read through
+    a guide. One possible example which will only take 10-15 minutes:
+      - https://learnxinyminutes.com/docs/lua/
+
+    After understanding a bit more about Lua, you can use `:help lua-guide` as a
+    reference for how Neovim integrates Lua.
+    - :help lua-guide
+    - (or HTML version): https://neovim.io/doc/user/lua-guide.html
+
+Kickstart Guide:
+
+  TODO: The very first thing you should do is to run the command `:Tutor` in Neovim.
+
+    If you don't know what this means, type the following:
+      - <escape key>
+      - :
+      - Tutor
+      - <enter key>
+
+    (If you already know the Neovim basics, you can skip this step.)
+
+  Once you've completed that, you can continue working through **AND READING** the rest
+  of the kickstart init.lua.
+
+  Next, run AND READ `:help`.
+    This will open up a help window with some basic information
+    about reading, navigating and searching the builtin help documentation.
+
+    This should be the first place you go to look when you're stuck or confused
+    with something. It's one of my favorite Neovim features.
+
+    MOST IMPORTANTLY, we provide a keymap "<space>sh" to [s]earch the [h]elp documentation,
+    which is very useful when you're not exactly sure of what you're looking for.
+
+  I have left several `:help X` comments throughout the init.lua
+    These are hints about where to find more information about the relevant settings,
+    plugins or Neovim features used in Kickstart.
+
+   NOTE: Look for lines like this
+
+    Throughout the file. These are for you, the reader, to help you understand what is happening.
+    Feel free to delete them once you know what you're doing, but they should serve as a guide
+    for when you are first encountering a few different constructs in your Neovim config.
+
+If you experience any errors while trying to install kickstart, run `:checkhealth` for more info.
+
+I hope you enjoy your Neovim journey,
+- TJ
+
+P.S. You can delete this when you're done too. It's your config now! :)
+--]]
+
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
--- Set to true if you have a Nerd Font installed
-vim.g.have_nerd_font = true
+-- Set to true if you have a Nerd Font installed and selected in the terminal
+vim.g.have_nerd_font = false
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -14,7 +100,9 @@ vim.g.have_nerd_font = true
 
 -- Make line numbers default
 vim.opt.number = true
-vim.opt.relativenumber = true
+-- You can also add relative line numbers, to help with jumping.
+--  Experiment for yourself to see if you like it!
+-- vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -64,13 +152,7 @@ vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 8
-
--- MPL options
-vim.opt.wrap = false
-vim.opt.expandtab = true
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 4
+vim.opt.scrolloff = 10
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -108,53 +190,6 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
--- MPL keymaps
-
--- Remap for dealing with word wrap
-vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-
--- Remap for moving a line down
-vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", {})
-vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", {})
--- scroll with cursor in middle of the screen
-vim.keymap.set('n', '<C-d>', '<C-d>zz', {})
-vim.keymap.set('n', '<C-u>', '<C-u>zz', {})
-
--- alternate esc
-vim.keymap.set('i', 'jk', '<Esc>', { desc = '<Esc> using jk' })
-
--- buffer commands
-vim.keymap.set('n', '<A-h>', ':bprev<CR>', { desc = 'buffer previous' })
-vim.keymap.set('n', '<A-l>', ':bnext<CR>', { desc = 'buffer next' })
-
--- Neorg keymap
-vim.keymap.set({ 'n' }, '<Leader>ni', ':Neorg index<CR>', { silent = true })
-vim.keymap.set({ 'n' }, '<Leader>nc', ':Neorg toggle-concealer<CR>', { silent = true })
-
--- Harpoon keymap
-vim.keymap.set({ 'n' }, '<leader>h1', function()
-  require('harpoon.ui').nav_file(1)
-end, { desc = 'Harpoon file 1' })
-vim.keymap.set({ 'n' }, '<leader>h2', function()
-  require('harpoon.ui').nav_file(2)
-end, { desc = 'Harpoon file 2' })
-vim.keymap.set({ 'n' }, '<leader>h3', function()
-  require('harpoon.ui').nav_file(3)
-end, { desc = 'Harpoon file 3' })
-vim.keymap.set({ 'n' }, '<leader>h4', function()
-  require('harpoon.ui').nav_file(4)
-end, { desc = 'Harpoon file 4' })
-vim.keymap.set({ 'n' }, '<leader>ha', function()
-  require('harpoon.mark').add_file()
-end, { desc = 'Add file to Harpoon list' })
-vim.keymap.set({ 'n' }, '<leader>hl', function()
-  require('harpoon.ui').toggle_quick_menu()
-end, { desc = 'toggle Harpoon list' })
-
--- Undotree Keymaps
-vim.keymap.set({ 'n' }, '<leader>ut', ':UndotreeToggle<CR>', { desc = 'toggle Undotree' })
-
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -166,17 +201,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function()
     vim.highlight.on_yank()
-  end,
-})
-
--- MPL autocommands
-vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufEnter' }, {
-  pattern = '*.txt, *.norg',
-  callback = function()
-    vim.opt.wrap = true
-    vim.opt.linebreak = true
-    vim.wo.number = false
-    vim.wo.relativenumber = false
   end,
 })
 
@@ -203,58 +227,6 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-
-  -- surround
-  'tpope/vim-surround',
-
-  -- tmux integration
-  {
-    'aserowy/tmux.nvim',
-    opts = {},
-  },
-
-  {
-    'ThePrimeagen/harpoon',
-    dependencies = { 'nvim-lua/plenary.nvim' },
-  },
-
-  {
-    'mbbill/undotree',
-  },
-
-  {
-    'nvim-neorg/neorg',
-    ft = 'norg',
-    build = ':Neorg sync-parsers',
-    dependencies = { 'nvim-lua/plenary.nvim' },
-    cmd = { 'Neorg' },
-    config = function()
-      require('neorg').setup {
-        load = {
-          ['core.defaults'] = {},
-          ['core.concealer'] = {
-            config = {
-              icons = {
-                todo = {
-                  undone = {
-                    icon = ' ',
-                  },
-                },
-              },
-            },
-          },
-          ['core.dirman'] = {
-            config = {
-              workspaces = {
-                notes = '~/Documents/notes/',
-              },
-              default_workspace = 'notes',
-            },
-          },
-        },
-      }
-    end,
-  },
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -314,7 +286,13 @@ require('lazy').setup({
         ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
         ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
         ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+        ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
+        ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
       }
+      -- visual mode
+      require('which-key').register({
+        ['<leader>h'] = { 'Git [H]unk' },
+      }, { mode = 'v' })
     end,
   },
 
@@ -434,7 +412,7 @@ require('lazy').setup({
     'neovim/nvim-lspconfig',
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
-      'williamboman/mason.nvim',
+      { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
@@ -536,15 +514,36 @@ require('lazy').setup({
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client.server_capabilities.documentHighlightProvider then
+            local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
               buffer = event.buf,
+              group = highlight_augroup,
               callback = vim.lsp.buf.document_highlight,
             })
 
             vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
               buffer = event.buf,
+              group = highlight_augroup,
               callback = vim.lsp.buf.clear_references,
             })
+
+            vim.api.nvim_create_autocmd('LspDetach', {
+              group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
+              callback = function(event2)
+                vim.lsp.buf.clear_references()
+                vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
+              end,
+            })
+          end
+
+          -- The following autocommand is used to enable inlay hints in your
+          -- code, if the language server you are using supports them
+          --
+          -- This may be unwanted, since they displace some of your code
+          if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
+            map('<leader>th', function()
+              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+            end, '[T]oggle Inlay [H]ints')
           end
         end,
       })
@@ -568,7 +567,7 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        pyright = {},
+        -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -654,7 +653,7 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        python = { 'isort', 'black' },
+        -- python = { "isort", "black" },
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
@@ -732,6 +731,12 @@ require('lazy').setup({
           --  This will expand snippets if the LSP sent a snippet.
           ['<C-y>'] = cmp.mapping.confirm { select = true },
 
+          -- If you prefer more traditional completion keymaps,
+          -- you can uncomment the following lines
+          --['<CR>'] = cmp.mapping.confirm { select = true },
+          --['<Tab>'] = cmp.mapping.select_next_item(),
+          --['<S-Tab>'] = cmp.mapping.select_prev_item(),
+
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
           --  completions whenever it has completion options available.
@@ -768,14 +773,21 @@ require('lazy').setup({
     end,
   },
 
-  {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
-    priority = 1000,
-    config = function()
-      if vim.version().minor < 10 then
-        vim.cmd.colorscheme 'onedark'
-      end
+  { -- You can easily change to a different colorscheme.
+    -- Change the name of the colorscheme plugin below, and then
+    -- change the command in the config to whatever the name of that colorscheme is.
+    --
+    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
+    'folke/tokyonight.nvim',
+    priority = 1000, -- Make sure to load this before all the other start plugins.
+    init = function()
+      -- Load the colorscheme here.
+      -- Like many other themes, this one has different styles, and you could load
+      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+      vim.cmd.colorscheme 'tokyonight-night'
+
+      -- You can configure highlights by doing something like:
+      vim.cmd.hi 'Comment gui=none'
     end,
   },
 
@@ -823,7 +835,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'python' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -838,6 +850,8 @@ require('lazy').setup({
     config = function(_, opts)
       -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
 
+      -- Prefer git instead of curl in order to improve connectivity in some environments
+      require('nvim-treesitter.install').prefer_git = true
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup(opts)
 
@@ -862,6 +876,9 @@ require('lazy').setup({
   -- require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
+  -- require 'kickstart.plugins.autopairs',
+  -- require 'kickstart.plugins.neo-tree',
+  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
