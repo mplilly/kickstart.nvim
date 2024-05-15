@@ -101,7 +101,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
--- NOTE MPL additions
+-- NOTE: MPL additions
 require 'custom.keymaps'
 require 'custom.autocommands'
 require 'custom.options'
@@ -493,6 +493,9 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'black', -- python formatter
+        'flake8', -- python linter
+        'markdownlint', -- markdown linter
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
