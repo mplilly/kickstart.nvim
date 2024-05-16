@@ -22,6 +22,7 @@ vim.keymap.set('n', '<A-l>', ':bnext<CR>', { desc = 'buffer next' })
 vim.keymap.set({ 'n' }, '<Leader>ni', ':Neorg index<CR>', { silent = true })
 vim.keymap.set({ 'n' }, '<Leader>nc', ':Neorg toggle-concealer<CR>', { silent = true })
 
+-- TODO: harpoon and gitsigns share the same keymaps, which-key is wrong too
 -- Harpoon keymap
 vim.keymap.set({ 'n' }, '<leader>h1', function()
   require('harpoon.ui').nav_file(1)
