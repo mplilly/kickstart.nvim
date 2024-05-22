@@ -42,7 +42,8 @@ return {
           ['core.dirman'] = {
             config = {
               workspaces = {
-                notes = '~/Documents/notes/',
+                local_notes = '~/Documents/notes/',
+                notes = '~/OneDrive/notes/',
               },
               default_workspace = 'notes',
             },
