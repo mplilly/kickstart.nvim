@@ -19,11 +19,19 @@ return {
   },
 
   {
+    "vhyrro/luarocks.nvim",
+    priority = 1000,
+    config = true,
+  },
+
+  {
     'nvim-neorg/neorg',
     ft = 'norg',
     build = ':Neorg sync-parsers',
-    dependencies = { 'nvim-lua/plenary.nvim' },
+    dependencies = { 'luarocks.nvim' },
     cmd = { 'Neorg' },
+    version = "v7.0.0",
+    priority = 30,
     config = function()
       require('neorg').setup {
         load = {
