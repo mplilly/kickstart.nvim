@@ -56,6 +56,8 @@ return {
               default_workspace = 'notes',
             },
           },
+          ['core.integrations.treesitter'] = {},
+          ['core.export'] = {}
         },
       }
     end,
