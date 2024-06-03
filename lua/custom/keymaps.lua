@@ -15,8 +15,8 @@ vim.keymap.set('n', '<C-u>', '<C-u>zz', {})
 vim.keymap.set('i', 'jk', '<Esc>', { desc = '<Esc> using jk' })
 
 -- buffer commands
-vim.keymap.set('n', '<A-h>', ':bprev<CR>', { desc = 'buffer previous' })
-vim.keymap.set('n', '<A-l>', ':bnext<CR>', { desc = 'buffer next' })
+vim.keymap.set('n', '[b', ':bprev<CR>', { desc = 'previous buffer' })
+vim.keymap.set('n', ']b', ':bnext<CR>', { desc = 'next buffer' })
 
 -- Neorg keymap
 vim.keymap.set({ 'n' }, '<Leader>ni', ':Neorg index<CR>', { silent = true })
