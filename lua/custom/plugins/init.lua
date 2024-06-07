@@ -15,11 +15,20 @@ return {
   },
 
   {
+    'tpope/vim-surround',
+  },
+
+  {
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+  },
+
+  {
     'mbbill/undotree',
   },
 
   {
-    "vhyrro/luarocks.nvim",
+    'vhyrro/luarocks.nvim',
     priority = 1000,
     config = true,
   },
@@ -30,7 +39,7 @@ return {
     build = ':Neorg sync-parsers',
     dependencies = { 'luarocks.nvim' },
     cmd = { 'Neorg' },
-    version = "v7.0.0",
+    version = 'v7.0.0',
     priority = 30,
     config = function()
       require('neorg').setup {
@@ -57,7 +66,7 @@ return {
             },
           },
           ['core.integrations.treesitter'] = {},
-          ['core.export'] = {}
+          ['core.export'] = {},
         },
       }
     end,
