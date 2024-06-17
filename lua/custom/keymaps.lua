@@ -24,24 +24,27 @@ vim.keymap.set({ 'n' }, '<Leader>nc', ':Neorg toggle-concealer<CR>', { silent = 
 
 -- TODO: harpoon and gitsigns share the same keymaps, which-key is wrong too
 -- Harpoon keymap
-vim.keymap.set({ 'n' }, '<leader>h1', function()
+vim.keymap.set({ 'n' }, '<leader>m1', function()
   require('harpoon.ui').nav_file(1)
 end, { desc = 'Harpoon file 1' })
-vim.keymap.set({ 'n' }, '<leader>h2', function()
+vim.keymap.set({ 'n' }, '<leader>m2', function()
   require('harpoon.ui').nav_file(2)
 end, { desc = 'Harpoon file 2' })
-vim.keymap.set({ 'n' }, '<leader>h3', function()
+vim.keymap.set({ 'n' }, '<leader>m3', function()
   require('harpoon.ui').nav_file(3)
 end, { desc = 'Harpoon file 3' })
-vim.keymap.set({ 'n' }, '<leader>h4', function()
+vim.keymap.set({ 'n' }, '<leader>m4', function()
   require('harpoon.ui').nav_file(4)
 end, { desc = 'Harpoon file 4' })
-vim.keymap.set({ 'n' }, '<leader>ha', function()
+vim.keymap.set({ 'n' }, '<leader>ma', function()
   require('harpoon.mark').add_file()
 end, { desc = 'Add file to Harpoon list' })
-vim.keymap.set({ 'n' }, '<leader>hl', function()
+vim.keymap.set({ 'n' }, '<leader>mt', function()
   require('harpoon.ui').toggle_quick_menu()
 end, { desc = 'toggle Harpoon list' })
+
+-- Oil keymap
+vim.keymap.set("n", "-", "<CMD>Oil<CR>", {desc = "Open parent directory"})
 
 -- Undotree Keymaps
 vim.keymap.set({ 'n' }, '<leader>ut', ':UndotreeToggle<CR>', { desc = 'toggle Undotree' })
