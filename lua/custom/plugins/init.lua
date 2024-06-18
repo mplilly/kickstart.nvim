@@ -79,9 +79,8 @@ return {
           ['core.dirman'] = {
             config = {
               workspaces = {
-                -- notes = '~/OneDrive/notes/',
                 -- NOTE: need to adjust for mac vs windows
-                notes = '~/smb/mplilly/Documents/notes',
+                notes = '~/smb/cee/Documents/notes',
               },
               default_workspace = 'notes',
             },
