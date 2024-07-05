@@ -48,12 +48,6 @@ return {
   },
 
   {
-    'vhyrro/luarocks.nvim',
-    priority = 1000,
-    config = true,
-  },
-
-  {
     "nvim-treesitter/nvim-treesitter-textobjects",
     lazy = true,
     config = function()
@@ -89,19 +83,24 @@ return {
   },
 
   {
+    'vhyrro/luarocks.nvim',
+    priority = 1000,
+    config = true,
+  },
+
+  {
     'nvim-neorg/neorg',
-    ft = 'norg',
-    build = ':Neorg sync-parsers',
     dependencies = { 'luarocks.nvim' },
-    cmd = { 'Neorg' },
-    version = 'v7.0.0',
-    priority = 30,
+    lazy = false,
+    version = '*',
+    -- config = true,
     config = function()
       require('neorg').setup {
         load = {
           ['core.defaults'] = {},
           ['core.concealer'] = {
             config = {
+              icon_preset = "varied",
               icons = {
                 todo = {
                   undone = {
@@ -127,7 +126,48 @@ return {
     end,
   },
 
+  -- {
+  --   'nvim-neorg/neorg',
+  --   ft = 'norg',
+  --   build = ':Neorg sync-parsers',
+  --   dependencies = { 'luarocks.nvim' },
+  --   cmd = { 'Neorg' },
+  --   version = 'v7.0.0',
+  --   priority = 30,
+  --   config = function()
+  --     require('neorg').setup {
+  --       load = {
+  --         ['core.defaults'] = {},
+  --         ['core.concealer'] = {
+  --           config = {
+  --             icon_preset = "varied",
+  --             icons = {
+  --               todo = {
+  --                 undone = {
+  --                   icon = ' ',
+  --                 },
+  --               },
+  --             },
+  --           },
+  --         },
+  --         ['core.dirman'] = {
+  --           config = {
+  --             workspaces = {
+  --               -- NOTE: need to adjust for mac vs windows
+  --               notes = '~/smb/cee/Documents/notes',
+  --             },
+  --             default_workspace = 'notes',
+  --           },
+  --         },
+  --         ['core.integrations.treesitter'] = {},
+  --         ['core.export'] = {},
+  --       },
+  --     }
+  --   end,
+  -- },
+
   -- colorschemes
+
   {
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
     'folke/tokyonight.nvim',
