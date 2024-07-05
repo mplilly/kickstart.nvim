@@ -54,6 +54,41 @@ return {
   },
 
   {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    lazy = true,
+    config = function()
+      require("nvim-treesitter.config").setup({
+        textobjects = {
+          move = {
+            enable = true,
+            set_jumps = true,
+            goto_next_start = {
+              ["]f"] =  {query = "@call.outer", desc = "Next function call start"},
+              ["]m"] = { query = "@function.outer", desc = "Next method/function def start" },
+              ["]c"] = { query = "@class.outer", desc = "Next class start" },
+            },
+            goto_next_end = {
+              ["]F"] = { query = "@call.outer", desc = "Next function call end" },
+              ["]M"] = { query = "@function.outer", desc = "Next method/function def end" },
+              ["]C"] = { query = "@class.outer", desc = "Next class end" },
+            },
+            goto_previous_start = {
+              ["[f"] = { query = "@call.outer", desc = "Prev function call start" },
+              ["[m"] = { query = "@function.outer", desc = "Prev method/function def start" },
+              ["[c"] = { query = "@class.outer", desc = "Prev class start" },
+            },
+            goto_previous_end = {
+              ["[F"] = { query = "@call.outer", desc = "Prev function call end" },
+              ["[M"] = { query = "@function.outer", desc = "Prev method/function def end" },
+              ["[C"] = { query = "@class.outer", desc = "Prev class end" },
+            },
+          },
+        },
+      })
+    end,
+  },
+
+  {
     'nvim-neorg/neorg',
     ft = 'norg',
     build = ':Neorg sync-parsers',
