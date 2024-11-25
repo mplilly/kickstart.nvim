@@ -13,10 +13,15 @@ vim.keymap.set('n', '<C-u>', '<C-u>zz', {})
 
 -- alternate esc
 vim.keymap.set('i', 'jk', '<Esc>', { desc = '<Esc> using jk' })
+vim.keymap.set('i', 'kj', '<Esc>', { desc = '<Esc> using kj' })
 
 -- buffer commands
 vim.keymap.set('n', '[b', ':bprev<CR>', { desc = 'previous buffer' })
 vim.keymap.set('n', ']b', ':bnext<CR>', { desc = 'next buffer' })
+vim.keymap.set('n', '<leader>x', ':bd<CR>', { desc = 'delete buffer' })
+
+-- cd to directory of current file
+vim.keymap.set('n', '<leader>C', ':cd %:h', { desc = 'cd to directory of current file' })
 
 -- Neorg keymap
 vim.keymap.set({ 'n' }, '<Leader>ni', ':Neorg index<CR>', { silent = true })
