@@ -10,6 +10,16 @@ return {
   },
 
   {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    config = function()
+      vim.g.copilot_proxy = "https://proxy.sandia.gov:80"
+      require("copilot").setup({})
+    end,
+  },
+
+  {
     'ThePrimeagen/harpoon',
     dependencies = { 'nvim-lua/plenary.nvim' },
   },
