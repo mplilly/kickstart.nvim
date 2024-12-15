@@ -10,6 +10,12 @@ return {
         python = { 'flake8' },
       }
 
+      -- allow python files to have longer lines (can be configured in pyproject.toml)
+      local flake8 = require('lint').linters.flake8
+      flake8.args = {
+        '--max-line-length=128',
+      }
+
       -- Create autocommand which carries out the actual linting
       -- on the specified events.
       local lint_augroup = vim.api.nvim_create_augroup('lint', { clear = true })
