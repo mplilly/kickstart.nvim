@@ -10,6 +10,22 @@ return {
   },
 
   {
+    'folke/snacks.nvim',
+    priority = 1000,
+    lazy = false,
+    opts = {
+      bigfile = { enabled = true },
+      notifier = {
+        enabled = true,
+        timeout = 3000,
+      },
+    },
+    keys = {
+      { "<leader>un", function() Snacks.notifier.hide() end, desc = "Dismiss All Notifications" }
+    },
+  },
+
+  {
     'ThePrimeagen/harpoon',
     dependencies = { 'nvim-lua/plenary.nvim' },
   },
@@ -38,10 +54,10 @@ return {
     config = true
   },
 
-  {
-    'nvim-lualine/lualine.nvim',
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
-  },
+  -- {
+  --   'nvim-lualine/lualine.nvim',
+  --   dependencies = { 'nvim-tree/nvim-web-devicons' },
+  -- },
 
   {
     'mbbill/undotree',
@@ -126,46 +142,6 @@ return {
       }
     end,
   },
-
-  -- {
-  --   'nvim-neorg/neorg',
-  --   ft = 'norg',
-  --   build = ':Neorg sync-parsers',
-  --   dependencies = { 'luarocks.nvim' },
-  --   cmd = { 'Neorg' },
-  --   version = 'v7.0.0',
-  --   priority = 30,
-  --   config = function()
-  --     require('neorg').setup {
-  --       load = {
-  --         ['core.defaults'] = {},
-  --         ['core.concealer'] = {
-  --           config = {
-  --             icon_preset = "varied",
-  --             icons = {
-  --               todo = {
-  --                 undone = {
-  --                   icon = ' ',
-  --                 },
-  --               },
-  --             },
-  --           },
-  --         },
-  --         ['core.dirman'] = {
-  --           config = {
-  --             workspaces = {
-  --               -- NOTE: need to adjust for mac vs windows
-  --               notes = '~/smb/cee/Documents/notes',
-  --             },
-  --             default_workspace = 'notes',
-  --           },
-  --         },
-  --         ['core.integrations.treesitter'] = {},
-  --         ['core.export'] = {},
-  --       },
-  --     }
-  --   end,
-  -- },
 
   -- colorschemes
 
