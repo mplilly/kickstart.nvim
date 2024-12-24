@@ -34,24 +34,24 @@ return {
     'stevearc/oil.nvim',
     opts = {},
     -- Optional dependencies
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
   },
 
   {
     'kylechui/nvim-surround',
     -- version = "*", -- Use for stability; omit to use `main` branch for the latest features
-    event = "VeryLazy",
+    event = 'VeryLazy',
     config = function()
-        require("nvim-surround").setup({
-            -- Configuration here, or leave empty to use defaults
-        })
-    end
+      require('nvim-surround').setup {
+        -- Configuration here, or leave empty to use defaults
+      }
+    end,
   },
 
   {
     'akinsho/git-conflict.nvim',
-    version = "*",
-    config = true
+    version = '*',
+    config = true,
   },
 
   -- {
@@ -64,37 +64,37 @@ return {
   },
 
   {
-    "nvim-treesitter/nvim-treesitter-textobjects",
+    'nvim-treesitter/nvim-treesitter-textobjects',
     lazy = true,
     config = function()
-      require("nvim-treesitter.config").setup({
+      require('nvim-treesitter.config').setup {
         textobjects = {
           move = {
             enable = true,
             set_jumps = true,
             goto_next_start = {
-              ["]f"] =  {query = "@call.outer", desc = "Next function call start"},
-              ["]m"] = { query = "@function.outer", desc = "Next method/function def start" },
-              ["]c"] = { query = "@class.outer", desc = "Next class start" },
+              [']f'] = { query = '@call.outer', desc = 'Next function call start' },
+              [']m'] = { query = '@function.outer', desc = 'Next method/function def start' },
+              [']c'] = { query = '@class.outer', desc = 'Next class start' },
             },
             goto_next_end = {
-              ["]F"] = { query = "@call.outer", desc = "Next function call end" },
-              ["]M"] = { query = "@function.outer", desc = "Next method/function def end" },
-              ["]C"] = { query = "@class.outer", desc = "Next class end" },
+              [']F'] = { query = '@call.outer', desc = 'Next function call end' },
+              [']M'] = { query = '@function.outer', desc = 'Next method/function def end' },
+              [']C'] = { query = '@class.outer', desc = 'Next class end' },
             },
             goto_previous_start = {
-              ["[f"] = { query = "@call.outer", desc = "Prev function call start" },
-              ["[m"] = { query = "@function.outer", desc = "Prev method/function def start" },
-              ["[c"] = { query = "@class.outer", desc = "Prev class start" },
+              ['[f'] = { query = '@call.outer', desc = 'Prev function call start' },
+              ['[m'] = { query = '@function.outer', desc = 'Prev method/function def start' },
+              ['[c'] = { query = '@class.outer', desc = 'Prev class start' },
             },
             goto_previous_end = {
-              ["[F"] = { query = "@call.outer", desc = "Prev function call end" },
-              ["[M"] = { query = "@function.outer", desc = "Prev method/function def end" },
-              ["[C"] = { query = "@class.outer", desc = "Prev class end" },
+              ['[F'] = { query = '@call.outer', desc = 'Prev function call end' },
+              ['[M'] = { query = '@function.outer', desc = 'Prev method/function def end' },
+              ['[C'] = { query = '@class.outer', desc = 'Prev class end' },
             },
           },
         },
-      })
+      }
     end,
   },
 
@@ -117,7 +117,7 @@ return {
           ['core.concealer'] = {
             config = {
               folds = false,
-              icon_preset = "varied",
+              icon_preset = 'varied',
               icons = {
                 todo = {
                   undone = {
@@ -156,7 +156,7 @@ return {
     init = function()
       if vim.version().minor < 10 then
         -- use neovim default colorscheme for 0.10
-        vim.cmd.colorscheme 'onedark'
+        vim.cmd.colorscheme 'tokyonight-night'
       else
         vim.cmd.colorscheme 'default'
       end
