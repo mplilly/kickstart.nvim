@@ -21,7 +21,13 @@ return {
       },
     },
     keys = {
-      { "<leader>un", function() Snacks.notifier.hide() end, desc = "Dismiss All Notifications" }
+      {
+        '<leader>un',
+        function()
+          Snacks.notifier.hide()
+        end,
+        desc = 'Dismiss All Notifications',
+      },
     },
   },
 
@@ -54,9 +60,12 @@ return {
     config = true,
   },
 
+  {
+    'sindrets/diffview.nvim',
+  },
+
   -- {
-  --   'nvim-lualine/lualine.nvim',
-  --   dependencies = { 'nvim-tree/nvim-web-devicons' },
+  --   'tpope/vim-fugitive',
   -- },
 
   {
