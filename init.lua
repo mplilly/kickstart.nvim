@@ -587,7 +587,8 @@ require('lazy').setup({
             },
           },
         },
-        -- rust_analyzer = {},
+
+        rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -630,6 +631,7 @@ require('lazy').setup({
         'isort',
         'flake8',
         'markdownlint',
+        'rust_analyzer',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -854,7 +856,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'python' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'python', 'rust' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {

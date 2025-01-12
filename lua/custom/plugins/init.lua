@@ -10,6 +10,12 @@ return {
   },
 
   {
+    'akinsho/toggleterm.nvim',
+    version = '*',
+    opts = {},
+  },
+
+  {
     'ThePrimeagen/harpoon',
     dependencies = { 'nvim-lua/plenary.nvim' },
   },
