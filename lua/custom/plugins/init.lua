@@ -57,7 +57,7 @@ return {
         enabled = true,
         timeout = 3000,
       },
-      terminal = { enabled = true },
+      terminal = { win = { style = 'terminal' } },
     },
     keys = {
       {
