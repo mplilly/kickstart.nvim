@@ -13,16 +13,26 @@ vim.keymap.set('n', '<C-u>', '<C-u>zz', {})
 
 -- alternate esc
 vim.keymap.set('i', 'jk', '<Esc>', { desc = '<Esc> using jk' })
+vim.keymap.set('i', 'kj', '<Esc>', { desc = '<Esc> using kj' })
 
 -- buffer commands
 vim.keymap.set('n', '[b', ':bprev<CR>', { desc = 'previous buffer' })
 vim.keymap.set('n', ']b', ':bnext<CR>', { desc = 'next buffer' })
+vim.keymap.set('n', '<leader>bx', ':bd<CR>', { desc = 'delete buffer' })
+
+-- cd to directory of current file
+vim.keymap.set('n', '<leader>C', ':cd %:h', { desc = 'cd to directory of current file' })
 
 -- Neorg keymap
-vim.keymap.set({ 'n' }, '<Leader>ni', ':Neorg index<CR>', { silent = true })
+vim.keymap.set({ 'n' }, '<Leader>ni', ':Neorg index<CR>', { silent = true, desc = 'neorg index' })
 vim.keymap.set({ 'n' }, '<Leader>nc', ':Neorg toggle-concealer<CR>', { silent = true })
 
--- TODO: harpoon and gitsigns share the same keymaps, which-key is wrong too
+-- execute lua code
+vim.keymap.set({'n'}, '<leader><space>x', ':source %<CR>', {desc = 'execute this line of lua code'})
+vim.keymap.set({'n'}, '<leader>x', ':.lua<CR>', {desc = 'execute this line of lua code'})
+vim.keymap.set({'v'}, '<leader>x', ':lua<CR>', {desc = 'execute visually selected lua code'})
+
+
 -- Harpoon keymap
 vim.keymap.set({ 'n' }, '<leader>m1', function()
   require('harpoon.ui').nav_file(1)
